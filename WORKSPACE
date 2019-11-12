@@ -50,6 +50,5 @@ pip_import(
     requirements = "@com_google_fhir//bazel:requirements.txt",
 )
 
-
 load("@com_google_fhir//bazel:dependencies.bzl", "fhir_proto_dependencies")
 fhir_proto_dependencies()

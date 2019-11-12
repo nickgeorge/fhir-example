@@ -1,33 +1,16 @@
-# Example code for generating profiles, and converting data into that profile.
+# Example Custom Profile
 
-This directory contains example code for creating a custom profile, as well as a c++ script that converts existing data into that profile.  The profiled data can then be uploaded to BigQuery.
+This directory contains an example profile set, containing a single profile of Patient, that extends from the [US-Core patient](http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient).
 
-This should be done in between steps 2 & 3 in the [BigQuery examples](https://github.com/google/fhir/tree/master/examples/bigquery)
-
-To run, assuming MY_DIR has the directory used in [BigQuery examples](https://github.com/google/fhir/tree/master/examples/bigquery):
+There is currently no .proto file in this directory - that is because generating the proto has been left as an exercise to the reader!  Before you can do this, however, the first step is to ensure that you have the proto-generating scripts in your bin:
 
 ```
-# Generate .proto files
-./generate_definitions_and_protos.sh //examples/profiles:demo
-
-# Convert Patient to DemoPatient (modify if you change name from DemoPatient)
-bazel run //examples/profiles:LocalProfiler $MY_DIR
-
-# Generate Schema
-bazel run //java:BigQuerySchemaGenerator $MY_DIR
-
-# Upload DemoPatient
-bq load --source_format=NEWLINE_DELIMITED_JSON --schema=$MY_DIR/DemoPatient.schema.json synthea.DemoPatient $MY_DIR/DemoPatient.ndjson
-
-# Run a query
-bq query --nouse_legacy_sql "\
-  SELECT \
-    birthPlace.city, \
-    APPROX_TOP_COUNT(SUBSTR(mothersMaidenName, 0, 3), 2), \
-    count(*) \
-  FROM \
-    synthea.DemoPatient p \
-  GROUP BY 1 \
-  ORDER BY 3 DESC \
-"
+wget -O ~/bin/generate_protos_utils.sh https://raw.githubusercontent.com/google/fhir/v0.5.0/bazel/generate_protos_utils.sh && \
+  wget -O ~/bin/generate_protos.sh https://raw.githubusercontent.com/google/fhir/v0.5.0/bazel/generate_protos.sh && \
+  wget -O ~/bin/generate_definitions_and_protos.sh https://raw.githubusercontent.com/google/fhir/v0.5.0/bazel/generate_definitions_and_protos.sh && \
+  chmod +x ~/bin/generate_protos.sh && chmod +x ~/bin/generate_definitions_and_protos.sh
+```
+Now, just invoke the generate_definitions_and_protos.sh script on 
+```
+generate_definitions_and_protos.sh //proto:demo
 ```

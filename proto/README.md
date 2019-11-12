@@ -10,7 +10,14 @@ wget -O ~/bin/generate_protos_utils.sh https://raw.githubusercontent.com/google/
   wget -O ~/bin/generate_definitions_and_protos.sh https://raw.githubusercontent.com/google/fhir/v0.5.0/bazel/generate_definitions_and_protos.sh && \
   chmod +x ~/bin/generate_protos.sh && chmod +x ~/bin/generate_definitions_and_protos.sh
 ```
-Now, just invoke the generate_definitions_and_protos.sh script on 
+Now, just invoke the generate_definitions_and_protos.sh script on the `gen_fhir_definitions_and_protos` rule in the BUILD file in this directory:
 ```
 generate_definitions_and_protos.sh //proto:demo
 ```
+
+You will see 3 files get generated: 
+* demo.json
+* demo_extensions.json
+* demo.proto.
+
+The JSON files contain the newly-defined structure defintions - demo_extensions.json is empty because we haven't defined any extensions.  demo.proto contains the newly-generated DemoPatient proto.  If we'd specified any extensions to generate, there would also be a demo_extensions.proto file.

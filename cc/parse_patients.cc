@@ -25,17 +25,38 @@
 
 using std::string;
 
-using ::google::fhir::JsonFhirStringToProto;
-using ::google::fhir::PrintFhirToJsonStringForAnalytics;
 using ::google::fhir::r4::core::Patient;
+using ::google::fhir::PrintFhirPrimitive;
+using ::google::fhir::JsonFhirStringToProto;
 
 int main(int argc, char** argv) {
   absl::TimeZone time_zone;
   CHECK(absl::LoadTimeZone("America/Los_Angeles", &time_zone));
 
-  const std::vector<Patient>& result =
-  		fhir_examples::ReadNdJsonFile<Patient>(
-  			time_zone, absl::StrCat(argv[1]));
+  std::ifstream read_stream;
+  read_stream.open(absl::StrCat(filename));
 
-  std::cout << result.front().DebugString() << std::endl;
+  std::vector<Patient> result;
+  std::string line;
+  while (!read_stream.eof()) {
+    std::getline(read_stream, line);
+    if (!line.length()) continue;
+    result.push_back(
+      JsonFhirStringToProto<Patient>(line, time_zone).ValueOrDie());
+  }
+
+  const Patient& example_patient = result.front();
+   
+  // See first record in FhirProto form
+  std::cout << example_patient.DebugString() << std::endl;
+  std::cout << example_patient.name(0).given(0).value() << " "
+            << example_patient.name(0).family().value()
+            << " was born on "
+            << PrintFhirPrimitive(example_patient.birth_date());
+
+
+  // Uncomment to see the first record converted back to FHIR JSON form
+  // const std::string first_record_as_json = 
+  //     ::google::fhir::PrettyPrintFhirJsonString().ValueOrDie();
+  // std::cout << first_record_as_json
 }

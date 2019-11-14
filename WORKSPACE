@@ -36,10 +36,10 @@ http_archive(
 
 http_archive(
     name = "com_google_fhir",
-    sha256 = "06cae84ae527682825b838d3c7c27152109ee0a589b4ed6235f9ed3fba92afce",
-    strip_prefix = "fhir-5dd3aefcffee5215f2eea278fa3cebc8cc3db1dd",
+    sha256 = "9098bf157f14075f7ce225d256aebe1bd083f53c7159fc3962d2e8e3553a20cb",
+    strip_prefix = "fhir-a8fa1dc118fcc2ae0832487c3919ad0c72e9b888",
     urls = [
-        "https://github.com/google/fhir/archive/5dd3aefcffee5215f2eea278fa3cebc8cc3db1dd.zip",
+        "https://github.com/google/fhir/archive/a8fa1dc118fcc2ae0832487c3919ad0c72e9b888.zip",
     ],
 )
 
